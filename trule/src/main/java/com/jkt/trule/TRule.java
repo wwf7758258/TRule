@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -15,7 +16,6 @@ import android.view.View;
  */
 public class TRule extends View {
     private Paint mTextPoint;
-    //刻度所占总的dimension
     private int TotalValue;
     //刻度超过屏幕横向中间标记线颜色
     private int mTextColor;
@@ -60,11 +60,8 @@ public class TRule extends View {
     private Paint mSmallScalePaint;
     private float mToBottomHeight;
     private float mToLineTop;
+    private float mSensitiveness;
 
-
-    public void setCurrentIndex(int currentIndex) {
-        this.mCurrentIndex = currentIndex;
-    }
 
     public TRule(Context context) {
         this(context, null, 0);
@@ -79,7 +76,6 @@ public class TRule extends View {
         mContext = context;
         initPaint();
         initAttr(attrs, defStyleAttr);
-        TotalValue = mSmallScaleNum * mBigScaleNum;
         //手势解析器
         gestureDetector = new GestureDetector(context, gestureListener);
         gestureDetector.setIsLongpressEnabled(false);
@@ -124,6 +120,8 @@ public class TRule extends View {
         mToBottomHeight = typedArray.getDimension(R.styleable.TRule_to_bottom_height, DensityUtil.dp2px(mContext, 2));
         //文本底部到中间线顶部距离
         mToLineTop = typedArray.getDimension(R.styleable.TRule_to_line_top, DensityUtil.dp2px(mContext, 30));
+        //灵敏度(以倍数为记,默认为1,类型为float)
+        mSensitiveness = typedArray.getFloat(R.styleable.TRule_sensitiveness, 1);
         typedArray.recycle();
 
     }
@@ -152,7 +150,6 @@ public class TRule extends View {
         canvas.drawLine(0, mHeight - mToBottomHeight, mWidth, mHeight - mToBottomHeight, mBottomPaint);
     }
 
-    //画中间的长线
     private void drawMiddleLine(Canvas canvas) {
         mMiddlePaint.setStrokeWidth(mMiddleLineWidth);
         mMiddlePaint.setColor(mMiddleLineColor);
@@ -164,7 +161,6 @@ public class TRule extends View {
         mBigScalePaint.setStrokeWidth(mBigScaleWidth);
         mSmallScalePaint.setColor(msmallScaleColor);
         mSmallScalePaint.setStrokeWidth(mSmallScaleWidth);
-        //计算游标开始绘制的位置
         float startLocation = (mWidth / 2) - mSmallScaleSpace * mCurrentIndex;
         for (int i = 0; i <= mSmallScaleNum * mBigScaleNum; i++) {
             float location = startLocation + i * mSmallScaleSpace;
@@ -172,20 +168,19 @@ public class TRule extends View {
                 //大刻度
                 canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mBigScaleHeight, mBigScalePaint);
                 String drawStr = null;
-                if (i / 10 <= 5) {
-                    drawStr = i / 10 + 1 + "个月";
-                } else if (i / 10 == 6) {
-                    drawStr = "全部";
-                } else {
-                    drawStr = i / 10 + "个月";
-                }
+//                if (mBigScaleNum % 2 == 0) {
+//                    drawStr = bigNumIsEven(i);
+//                }
+//                else {
+                drawStr = i / mSmallScaleNum + "个月";
+//                }
                 Rect bounds = new Rect();
-                if (i * mSmallScaleSpace == mCurrentIndex) {
-                    mTextPoint.setColor(mTextColor);
+                if (i == mCurrentIndex) {
+                    mTextPoint.setColor(mTextColorChoose);
                     mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 18
                     ));
                 } else {
-                    mTextPoint.setColor(mTextColorChoose);
+                    mTextPoint.setColor(mTextColor);
                     mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 15.5));
                 }
                 mTextPoint.getTextBounds(drawStr, 0, drawStr.length(), bounds);
@@ -199,6 +194,19 @@ public class TRule extends View {
         }
     }
 
+    @NonNull
+    private String bigNumIsEven(int i) {
+        String drawStr;
+        if (i / mBigScaleNum < mBigScaleNum / 2) {
+            drawStr = i / mBigScaleNum + "个月";
+        } else if (i / mBigScaleNum == mBigScaleNum / 2) {
+            drawStr = "全部";
+        } else {
+            drawStr = i / mBigScaleNum + i + "个月";
+        }
+        return drawStr;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         getParent().requestDisallowInterceptTouchEvent(true);
@@ -210,19 +218,16 @@ public class TRule extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 int round = 0;
-                if (Math.abs(mOnceTouchEventOffset) > 100) {
-                    round = Math.round(mPos / (float) 10);
+                if (Math.abs(mOnceTouchEventOffset) > mSmallScaleSpace * mSmallScaleNum) {
+                    round = Math.round(mPos / (float) mSmallScaleNum);
                 } else if (mOnceTouchEventOffset < 0) {
-                    double ceil = Math.ceil(mPos / (float) 10);
+                    double ceil = Math.ceil(mPos / (float) mSmallScaleNum);
                     round = (int) ceil;
                 } else {
-                    double floor = Math.floor(mPos / (float) 10);
+                    double floor = Math.floor(mPos / (float) mSmallScaleNum);
                     round = (int) floor;
                 }
-                setCurrentItem(round * 10);
-                if (onRulerChangeListener != null) {
-                    onRulerChangeListener.onRuleChanged(num);
-                }
+                innerSetCurrentIndex(round * mSmallScaleNum,true,true);
         }
         return true;
     }
@@ -237,42 +242,58 @@ public class TRule extends View {
 
     private void doScroll(int delta) {
         //每次onTouch完成之后要考虑具体偏移设计,需要参照单次onTouch总的偏移量(手势的onScroll方法会多次执行,所以需要做累加).
-        mOnceTouchEventOffset += delta;
+        mOnceTouchEventOffset += delta * mSensitiveness;
         //偏移量叠加
-        mScrollingOffset += delta;
+        mScrollingOffset += delta * mSensitiveness;
         //总共滚动了多少个Item
         int mCount = mScrollingOffset / mSmallScaleSpace;
         //当前刻度位置
-        mPos = mCurrentIndex  - mCount;
+        mPos = mCurrentIndex - mCount;
         //限制滚到范围,小于0刻度或者超过最大刻度
         if (mPos < 0) {
             mPos = 0;
-        } else if (mPos >= TotalValue ) {
-            mPos = TotalValue ;
+        } else if (mPos >= mBigScaleNum * mSmallScaleNum) {
+            mPos = mBigScaleNum * mSmallScaleNum;
         }
         //移动了一个Item的距离，就更新页面
-        if (mPos != mCurrentIndex / mSmallScaleSpace) {
-            setCurrentItem(mPos);
+        if (mPos != mCurrentIndex) {
+            innerSetCurrentIndex(mPos,true,false);
         }
         mScrollingOffset = mScrollingOffset - mCount * mSmallScaleSpace;
     }
 
-    int num;
+    int position;
 
-    public void setCurrentItem(int index) {
-        mCurrentIndex = index ;
-        invalidate();
-        if (mCurrentIndex / mBigScaleNum <= mSmallScaleNum / 2) {
-            num = mCurrentIndex / mBigScaleNum + 1;
-        } else {
-            num = mCurrentIndex / mBigScaleNum;
+    public void setCurrentIndex(int index) {
+        innerSetCurrentIndex(index, false,true);
+    }
+
+    public void innerSetCurrentIndex(int index, boolean inner,boolean callBack) {
+        if (mCurrentIndex < 0 || mCurrentIndex > mBigScaleNum * mSmallScaleNum) {
+            return;
         }
-        if (onRulerChangeListener != null) {
-            onRulerChangeListener.onRuleChanged(num);
+        if (!inner) {
+            mCurrentIndex = Math.round(index / mSmallScaleNum)*mSmallScaleNum;
+        } else {
+            mCurrentIndex = index;
+        }
+        invalidate();
+        if (mCurrentIndex / mSmallScaleNum <= mSmallScaleNum / 2) {
+            position = mCurrentIndex / mSmallScaleNum + 1;
+        } else {
+            position = mCurrentIndex / mSmallScaleNum;
+        }
+        if (onRulerChangeListener != null&&callBack) {
+            //下标索引开始位置,默认1
+            onRulerChangeListener.onRuleChanged(position);
         }
     }
 
     public interface OnRulerChangeListener {
-        void onRuleChanged(int num);
+        void onRuleChanged(int position);
+    }
+
+    public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {
+        this.onRulerChangeListener = onRulerChangeListener;
     }
 }

@@ -18,7 +18,6 @@
         <attr name="middle_line_color" format="color"/>
         <attr name="big_scale_color" format="color"/>
         <attr name="small_scale_color" format="color"/>
-
         <!--刻度字体大小、颜色以及是否选中-->
         <attr name="text_size" format="dimension"/>
         <attr name="text_size_choose" format="dimension"/>
@@ -28,8 +27,18 @@
         <attr name="bottom_color" format="color"/>
         <attr name="bottom_line_height" format="dimension"/>
         <attr name="to_bottom_height" format="dimension"/>
+
+
         <!--文本底部到中间线顶部的距离-->
         <attr name="to_line_top" format="dimension"/>
+        <!--灵敏度(以倍数为记,默认为1,类型为float)-->
+        <attr name="sensitiveness" format="float"/>
+        <!--中间标记文本、(只要设置就显示,如果总的大刻度数目不为偶数个,无论设置与否都不显示)-->
+        <attr name="center_text" format="string"/>
+        <!--下标索引开始位置,默认1-->
+        <attr name="index_start" format="integer"/>
+        <!--各个下标对应文本-->
+        <attr name="normal_text" format="string"/>
     </declare-styleable>
 
 </resources>
