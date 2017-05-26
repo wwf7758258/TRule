@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="RulerView">
-        <!--最大刻度-->
-        <attr name="max_value" format="dimension" />
-        <!--最小刻度-->
-        <attr name="min_value" format="dimension" />
-        <!--刻度高度-->
-        <attr name="scale_height" format="dimension" />
-        <!--刻度字体大小-->
-        <attr name="scale_text_size" format="dimension" />
-        <!--选中刻度字体-->
-        <attr name="scale_select_text_size" format="dimension" />
-        <!--刻度字体颜色-->
-        <attr name="scale_text_color" format="color" />
-        <!--刻度超过颜色-->
-        <attr name="scale_select_color" format="color" />
-        <!--刻度超过颜色背景-->
-        <attr name="scale_select_background_color" format="color" />
-        <!--刻度未超颜色-->
-        <attr name="scale_unselect_color" format="color" />
-        <!--刻度底部选中颜色-->
-        <attr name="scale_bmselect_color" format="color" />
-        <!--标记颜色-->
-        <attr name="tag_color" format="color" />
-        <!--标尺开始显示位置-->
-        <attr name="start_location" format="dimension" />
-        <!--一屏显示Item-->
-        <attr name="show_item_size" format="integer" />
-        <!--一个刻度的大小-->
-        <attr name="one_item_value" format="integer" />
+    <declare-styleable name="TRule">
+        <!--标尺开始显示位置(以小刻度为单位)-->
+        <attr name="init_location" format="integer"/>
+        <!--大刻度数、一个大刻度包含小刻度数、小刻度间隔宽度-->
+        <attr name="big_scale_num" format="integer"/>
+        <attr name="small_scale_num" format="integer"/>
+        <attr name="small_scale_space" format="dimension"/>
+        <!--中间线、大、小刻度高度、宽度-->
+        <attr name="middle_line_height" format="dimension"/>
+        <attr name="middle_line_width" format="dimension"/>
+        <attr name="big_scale_height" format="dimension"/>
+        <attr name="big_scale_width" format="dimension"/>
+        <attr name="small_scale_height" format="dimension"/>
+        <attr name="small_scale_width" format="dimension"/>
+        <!--中间线、大、小刻度颜色-->
+        <attr name="middle_line_color" format="color"/>
+        <attr name="big_scale_color" format="color"/>
+        <attr name="small_scale_color" format="color"/>
+
+        <!--刻度字体大小、颜色以及是否选中-->
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_size_choose" format="dimension"/>
+        <attr name="text_color" format="color"/>
+        <attr name="text_color_choose" format="color"/>
+        <!--底部线颜色、高、底部线距离控件底部距离-->
+        <attr name="bottom_color" format="color"/>
+        <attr name="bottom_line_height" format="dimension"/>
+        <attr name="to_bottom_height" format="dimension"/>
+
+
     </declare-styleable>
 
 </resources>

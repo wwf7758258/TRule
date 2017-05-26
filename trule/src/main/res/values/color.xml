@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="middle_line_color">#ff50f1bf</color>
+    <color name="big_scale_color">#aa86a7e8</color>
+    <color name="small_scale_color">#aa86a7e8</color>
+    <color name="bottom_line_color">#aa86a7e8</color>
+    <color name="text_color">#aa86a7e8</color>
+    <color name="text_color_choose">#ff50f1bf</color>
+</resources>

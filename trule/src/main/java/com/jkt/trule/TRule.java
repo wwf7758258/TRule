@@ -14,28 +14,22 @@ import android.view.View;
  * Created by 天哥哥 at 2017/5/25 10:29
  */
 public class TRule extends View {
+    private Paint mTextPoint;
     //刻度所占总的dimension
     private int TotalValue;
     //刻度超过屏幕横向中间标记线颜色
-    private int scaleSelectColor;
+    private int mTextColor;
     //刻度未超屏幕横向中间标记线颜色
-    private int scaleUnSelectColor;
+    private int mTextColorChoose;
     //标尺开始位置
-    private int currLocation = 60;
-    //一屏显示Item个数
-    private int showItemNumber;
-    //一个刻度的dimension
-    private int oneItemValue;
-    private Paint paint;
-    private Paint mPaintText;
+    private int mCurrentIndex = 0;
+
     //视图高度
-    private float viewHeight;
+    private float mHeight;
     //刻度宽度
-    private int mViewWidth;
-    //刻度宽度
-    private int mScaleWidth;
+    private int mWidth;
     //刻度高度
-    private float mScaleHeight;
+    private float mSmallScaleHeight;
     // 手势识别
     private GestureDetector gestureDetector;
     //滚动偏移量
@@ -45,18 +39,34 @@ public class TRule extends View {
     private int mPos;
     private int mOnceTouchEventOffset;
     private float mMiddleLineHeight;
+    private int mBigScaleNum;
+    private int mSmallScaleNum;
+    private int mSmallScaleSpace;
+    private int mInitLocation;
+    private float mBigScaleHeight;
+    private float mTextSize;
+    private float mTextSizeChoose;
+    private int mBottomLineColor;
+    private float mBottomLineHeight;
+    private float mMiddleLineWidth;
+    private float mBigScaleWidth;
+    private float mSmallScaleWidth;
+    private int mMiddleLineColor;
+    private int mBigScaleColor;
+    private int msmallScaleColor;
+    private Paint mBottomPaint;
+    private Paint mMiddlePaint;
+    private Paint mBigScalePaint;
+    private Paint mSmallScalePaint;
+    private float mToBottomHeight;
 
 
-    public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {
-        this.onRulerChangeListener = onRulerChangeListener;
-    }
-
-    public void setCurrLocation(int currLocation) {
-        this.currLocation = currLocation;
+    public void setCurrentIndex(int currentIndex) {
+        this.mCurrentIndex = currentIndex;
     }
 
     public TRule(Context context) {
-        this(context,null,0);
+        this(context, null, 0);
     }
 
     public TRule(Context context, AttributeSet attrs) {
@@ -66,34 +76,67 @@ public class TRule extends View {
     public TRule(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RulerView);
-        mMiddleLineHeight = DensityUtil.dp2px(mContext, 40);
-        mScaleHeight = DensityUtil.dp2px(mContext, 20);
-        mPaintText = new Paint(Paint.ANTI_ALIAS_FLAG);
-        TotalValue = typedArray.getDimensionPixelOffset(R.styleable.RulerView_max_value, 120000);
-        scaleSelectColor = typedArray.getColor(R.styleable.RulerView_scale_select_color, 0xff50f1bf);
-        scaleUnSelectColor = typedArray.getColor(R.styleable.RulerView_scale_unselect_color, 0xaa86a7e8);
-        if (currLocation == 0) {
-            currLocation = typedArray.getDimensionPixelOffset(R.styleable.RulerView_start_location, 0);
-        }
-        showItemNumber = typedArray.getInteger(R.styleable.RulerView_show_item_size, 50);
-        oneItemValue = typedArray.getInteger(R.styleable.RulerView_show_item_size, 1000);
-        typedArray.recycle();
+        initPaint();
+        initAttr(attrs, defStyleAttr);
+        TotalValue = mSmallScaleNum * mBigScaleNum;
         //手势解析器
         gestureDetector = new GestureDetector(context, gestureListener);
         gestureDetector.setIsLongpressEnabled(false);
     }
 
+    private void initPaint() {
+        mMiddlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBottomPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBigScalePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mSmallScalePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPoint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    }
+
+    private void initAttr(AttributeSet attrs, int defStyleAttr) {
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.TRule, defStyleAttr, 0);
+        //标尺开始显示位置(以小刻度为单位)
+        mCurrentIndex = typedArray.getInteger(R.styleable.TRule_init_location, 0);
+        //大刻度数、一个大刻度包含小刻度数、小刻度间隔宽度
+        mBigScaleNum = typedArray.getInteger(R.styleable.TRule_big_scale_num, 12);
+        mSmallScaleNum = typedArray.getInteger(R.styleable.TRule_small_scale_num, 10);
+        mSmallScaleSpace = (int) typedArray.getDimension(R.styleable.TRule_small_scale_space, DensityUtil.dp2px(mContext,10));
+        //中间线、大、小刻度高度、宽度
+        mMiddleLineHeight = typedArray.getDimension(R.styleable.TRule_middle_line_height, DensityUtil.dp2px(mContext, 40));
+        mMiddleLineWidth = typedArray.getDimension(R.styleable.TRule_middle_line_width, DensityUtil.dp2px(mContext, (float) 0.5));
+        mBigScaleHeight = typedArray.getDimension(R.styleable.TRule_big_scale_height, DensityUtil.dp2px(mContext, 20));
+        mBigScaleWidth = typedArray.getDimension(R.styleable.TRule_big_scale_height, DensityUtil.dp2px(mContext, (float) 0.5));
+        mSmallScaleHeight = typedArray.getDimension(R.styleable.TRule_small_scale_height, DensityUtil.dp2px(mContext, 10));
+        mSmallScaleWidth = typedArray.getDimension(R.styleable.TRule_small_scale_width, DensityUtil.dp2px(mContext, (float) 0.5));
+        //中间线、大、小刻度颜色
+        mMiddleLineColor = typedArray.getColor(R.styleable.TRule_middle_line_color, mContext.getResources().getColor(R.color.middle_line_color));
+        mBigScaleColor = typedArray.getColor(R.styleable.TRule_big_scale_color, mContext.getResources().getColor(R.color.big_scale_color));
+        msmallScaleColor = typedArray.getColor(R.styleable.TRule_small_scale_color, mContext.getResources().getColor(R.color.small_scale_color));
+        //刻度字体大小以及选中大小
+        mTextSize = typedArray.getDimension(R.styleable.TRule_text_size, DensityUtil.sp2px(mContext, 12));
+        mTextSizeChoose = typedArray.getDimension(R.styleable.TRule_text_size_choose, DensityUtil.sp2px(mContext, 15));
+        //刻度字体颜色、以及选中颜色
+        mTextColor = typedArray.getColor(R.styleable.TRule_text_color, mContext.getResources().getColor(R.color.text_color));
+        mTextColorChoose = typedArray.getColor(R.styleable.TRule_text_color_choose, mContext.getResources().getColor(R.color.text_color_choose));
+        //底部线颜色、高、底部线距离控件底部距离
+        mBottomLineColor = typedArray.getColor(R.styleable.TRule_bottom_color, mContext.getResources().getColor(R.color.bottom_line_color));
+        mBottomLineHeight = typedArray.getDimension(R.styleable.TRule_bottom_line_height, DensityUtil.dp2px(mContext, (float) 0.5));
+        mToBottomHeight = typedArray.getDimension(R.styleable.TRule_to_bottom_height, DensityUtil.dp2px(mContext, 2));
+        typedArray.recycle();
+
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        viewHeight = MeasureSpec.getSize(heightMeasureSpec);
-        mViewWidth = MeasureSpec.getSize(widthMeasureSpec);
+        MeasureSpec.getSize(widthMeasureSpec);
+        MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
 
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        mWidth = getWidth();
+        mHeight = getHeight();
         drawBottomLine(canvas);
         drawScale(canvas);
         drawMiddleLine(canvas);
@@ -101,37 +144,30 @@ public class TRule extends View {
 
 
     private void drawBottomLine(Canvas canvas) {
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(3);
-        paint.setColor(scaleUnSelectColor);
-        canvas.drawLine(0, viewHeight - 10, getWidth(), viewHeight - 10, paint);
+        mBottomPaint.setStrokeWidth(mBottomLineHeight);
+        mBottomPaint.setColor(mBottomLineColor);
+        canvas.drawLine(0, mHeight - mToBottomHeight, mWidth, mHeight - mToBottomHeight, mBottomPaint);
     }
 
     //画中间的长线
     private void drawMiddleLine(Canvas canvas) {
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(3);
-        paint.setColor(0xff50f1bf);
-        canvas.drawLine(mViewWidth / 2, viewHeight - 10 - mMiddleLineHeight, mViewWidth / 2, viewHeight - 10, paint);
+        mMiddlePaint.setStrokeWidth(mMiddleLineWidth);
+        mMiddlePaint.setColor(mMiddleLineColor);
+        canvas.drawLine(mWidth / 2, mHeight - DensityUtil.dp2px(mContext, 2) - mMiddleLineHeight, mWidth / 2, mHeight - DensityUtil.dp2px(mContext, 2), mMiddlePaint);
     }
 
     private void drawScale(Canvas canvas) {
-        mScaleWidth = mViewWidth / showItemNumber;
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(2);
+        mBigScalePaint.setColor(mBigScaleColor);
+        mBigScalePaint.setStrokeWidth(mBigScaleWidth);
+        mSmallScalePaint.setColor(msmallScaleColor);
+        mSmallScalePaint.setStrokeWidth(mSmallScaleWidth);
         //计算游标开始绘制的位置
-        float startLocation = (mViewWidth / 2) - ((mScaleWidth * (currLocation / oneItemValue)));
-        for (int i = 0; i <= TotalValue / oneItemValue; i++) {
-            //判断当前刻度是否小于当前刻度
-            if (i * oneItemValue == currLocation) {
-                paint.setColor(scaleSelectColor);
-            } else {
-                paint.setColor(scaleUnSelectColor);
-            }
-            float location = startLocation + i * mScaleWidth;
-            if (i % 10 == 0) {
+        float startLocation = (mWidth / 2) - mSmallScaleSpace * mCurrentIndex;
+        for (int i = 0; i <= mSmallScaleNum * mBigScaleNum; i++) {
+            float location = startLocation + i * mSmallScaleSpace;
+            if (i % mSmallScaleNum == 0) {
                 //大刻度
-                canvas.drawLine(location, viewHeight - mScaleHeight - 10, location, viewHeight - 10, paint);
+                canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mBigScaleHeight, mBigScalePaint);
                 String drawStr = null;
                 if (i / 10 <= 5) {
                     drawStr = i / 10 + 1 + "个月";
@@ -141,19 +177,19 @@ public class TRule extends View {
                     drawStr = i / 10 + "个月";
                 }
                 Rect bounds = new Rect();
-                if (i * oneItemValue == currLocation) {
-                    mPaintText.setColor(scaleSelectColor);
-                    mPaintText.setTextSize(DensityUtil.dp2px(mContext, (float) 17.5));
+                if (i * mSmallScaleSpace == mCurrentIndex) {
+                    mTextPoint.setColor(mTextColor);
+                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 17.5));
                 } else {
-                    mPaintText.setColor(scaleUnSelectColor);
-                    mPaintText.setTextSize(DensityUtil.dp2px(mContext, (float) 14.5));
+                    mTextPoint.setColor(mTextColorChoose);
+                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 14.5));
                 }
-                mPaintText.getTextBounds(drawStr, 0, drawStr.length(), bounds);
+                mTextPoint.getTextBounds(drawStr, 0, drawStr.length(), bounds);
                 //添加刻度文字
-                canvas.drawText(drawStr, location - bounds.width() / 2, 65, mPaintText);
+                canvas.drawText(drawStr, location - bounds.width() / 2, 65, mTextPoint);
             } else {
                 //小刻度
-                canvas.drawLine(location, viewHeight - mScaleHeight / 2 - 10, location, viewHeight - 10, paint);
+                canvas.drawLine(location, mHeight - mSmallScaleHeight / 2 - 10, location, mHeight - 10, mSmallScalePaint);
             }
 
         }
@@ -201,34 +237,33 @@ public class TRule extends View {
         //偏移量叠加
         mScrollingOffset += delta;
         //总共滚动了多少个Item
-        int mCount = mScrollingOffset / mScaleWidth;
+        int mCount = mScrollingOffset / mSmallScaleSpace;
         //当前刻度位置
-        mPos = currLocation / oneItemValue - mCount;
+        mPos = mCurrentIndex / mSmallScaleSpace - mCount;
         //限制滚到范围,小于0刻度或者超过最大刻度
         if (mPos < 0) {
             mPos = 0;
-        } else if (mPos >= TotalValue / oneItemValue) {
-            mPos = TotalValue / oneItemValue;
+        } else if (mPos >= TotalValue / mSmallScaleSpace) {
+            mPos = TotalValue / mSmallScaleSpace;
         }
         //移动了一个Item的距离，就更新页面
-        if (mPos != currLocation / oneItemValue) {
+        if (mPos != mCurrentIndex / mSmallScaleSpace) {
             setCurrentItem(mPos);
         }
-        // 重新更新一下偏移量(这点不懂可以来问我)
-        mScrollingOffset = mScrollingOffset - mCount * mScaleWidth;
+        mScrollingOffset = mScrollingOffset - mCount * mSmallScaleSpace;
     }
 
     int str;
 
     public void setCurrentItem(int index) {
-        currLocation = index * oneItemValue;
+        mCurrentIndex = index * mSmallScaleSpace;
         invalidate();
-        if (currLocation / 10000 <= 5) {
-            str = currLocation / 10000 + 1;
-        } else if (currLocation / 10000 == 6) {
+        if (mCurrentIndex / 10000 <= 5) {
+            str = mCurrentIndex / 10000 + 1;
+        } else if (mCurrentIndex / 10000 == 6) {
             str = 0;
         } else {
-            str = currLocation / 10000;
+            str = mCurrentIndex / 10000;
         }
         if (onRulerChangeListener != null) {
             onRulerChangeListener.onRuleChanged(str);

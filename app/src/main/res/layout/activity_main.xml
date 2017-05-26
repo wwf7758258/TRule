@@ -8,6 +8,7 @@
     tools:context="com.jkt.rule.MainActivity">
 
     <com.jkt.trule.TRule
+        android:id="@+id/main_TRule"
         android:layout_width="match_parent"
         android:background="@color/colorGray1"
         android:layout_height="100dp"
