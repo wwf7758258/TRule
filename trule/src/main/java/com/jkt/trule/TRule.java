@@ -100,7 +100,7 @@ public class TRule extends View {
         //大刻度数、一个大刻度包含小刻度数、小刻度间隔宽度
         mBigScaleNum = typedArray.getInteger(R.styleable.TRule_big_scale_num, 12);
         mSmallScaleNum = typedArray.getInteger(R.styleable.TRule_small_scale_num, 10);
-        mSmallScaleSpace = (int) typedArray.getDimension(R.styleable.TRule_small_scale_space, DensityUtil.dp2px(mContext,10));
+        mSmallScaleSpace = (int) typedArray.getDimension(R.styleable.TRule_small_scale_space, DensityUtil.dp2px(mContext, 10));
         //中间线、大、小刻度高度、宽度
         mMiddleLineHeight = typedArray.getDimension(R.styleable.TRule_middle_line_height, DensityUtil.dp2px(mContext, 40));
         mMiddleLineWidth = typedArray.getDimension(R.styleable.TRule_middle_line_width, DensityUtil.dp2px(mContext, (float) 0.5));
@@ -123,7 +123,7 @@ public class TRule extends View {
         mBottomLineHeight = typedArray.getDimension(R.styleable.TRule_bottom_line_height, DensityUtil.dp2px(mContext, (float) 0.5));
         mToBottomHeight = typedArray.getDimension(R.styleable.TRule_to_bottom_height, DensityUtil.dp2px(mContext, 2));
         //文本底部到中间线顶部距离
-        mToLineTop= typedArray.getDimension(R.styleable.TRule_to_line_top, DensityUtil.dp2px(mContext, 30));
+        mToLineTop = typedArray.getDimension(R.styleable.TRule_to_line_top, DensityUtil.dp2px(mContext, 30));
         typedArray.recycle();
 
     }
@@ -182,17 +182,18 @@ public class TRule extends View {
                 Rect bounds = new Rect();
                 if (i * mSmallScaleSpace == mCurrentIndex) {
                     mTextPoint.setColor(mTextColor);
-                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 18));
+                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 18
+                    ));
                 } else {
                     mTextPoint.setColor(mTextColorChoose);
                     mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 15.5));
                 }
                 mTextPoint.getTextBounds(drawStr, 0, drawStr.length(), bounds);
                 //添加刻度文字
-                canvas.drawText(drawStr, location - bounds.width() / 2,mHeight-mToBottomHeight-mMiddleLineHeight-mToLineTop, mTextPoint);
+                canvas.drawText(drawStr, location - bounds.width() / 2, mHeight - mToBottomHeight - mMiddleLineHeight - mToLineTop, mTextPoint);
             } else {
                 //小刻度
-                canvas.drawLine(location, mHeight -mToBottomHeight , location, mHeight - mToBottomHeight-mSmallScaleHeight , mSmallScalePaint);
+                canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mSmallScaleHeight, mSmallScalePaint);
             }
 
         }
@@ -220,7 +221,7 @@ public class TRule extends View {
                 }
                 setCurrentItem(round * 10);
                 if (onRulerChangeListener != null) {
-                    onRulerChangeListener.onRuleChanged(str);
+                    onRulerChangeListener.onRuleChanged(num);
                 }
         }
         return true;
@@ -242,12 +243,12 @@ public class TRule extends View {
         //总共滚动了多少个Item
         int mCount = mScrollingOffset / mSmallScaleSpace;
         //当前刻度位置
-        mPos = mCurrentIndex / mSmallScaleSpace - mCount;
+        mPos = mCurrentIndex  - mCount;
         //限制滚到范围,小于0刻度或者超过最大刻度
         if (mPos < 0) {
             mPos = 0;
-        } else if (mPos >= TotalValue / mSmallScaleSpace) {
-            mPos = TotalValue / mSmallScaleSpace;
+        } else if (mPos >= TotalValue ) {
+            mPos = TotalValue ;
         }
         //移动了一个Item的距离，就更新页面
         if (mPos != mCurrentIndex / mSmallScaleSpace) {
@@ -256,20 +257,18 @@ public class TRule extends View {
         mScrollingOffset = mScrollingOffset - mCount * mSmallScaleSpace;
     }
 
-    int str;
+    int num;
 
     public void setCurrentItem(int index) {
-        mCurrentIndex = index * mSmallScaleSpace;
+        mCurrentIndex = index ;
         invalidate();
-        if (mCurrentIndex / 10000 <= 5) {
-            str = mCurrentIndex / 10000 + 1;
-        } else if (mCurrentIndex / 10000 == 6) {
-            str = 0;
+        if (mCurrentIndex / mBigScaleNum <= mSmallScaleNum / 2) {
+            num = mCurrentIndex / mBigScaleNum + 1;
         } else {
-            str = mCurrentIndex / 10000;
+            num = mCurrentIndex / mBigScaleNum;
         }
         if (onRulerChangeListener != null) {
-            onRulerChangeListener.onRuleChanged(str);
+            onRulerChangeListener.onRuleChanged(num);
         }
     }
 
