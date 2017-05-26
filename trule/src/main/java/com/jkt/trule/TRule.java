@@ -59,6 +59,7 @@ public class TRule extends View {
     private Paint mBigScalePaint;
     private Paint mSmallScalePaint;
     private float mToBottomHeight;
+    private float mToLineTop;
 
 
     public void setCurrentIndex(int currentIndex) {
@@ -121,6 +122,8 @@ public class TRule extends View {
         mBottomLineColor = typedArray.getColor(R.styleable.TRule_bottom_color, mContext.getResources().getColor(R.color.bottom_line_color));
         mBottomLineHeight = typedArray.getDimension(R.styleable.TRule_bottom_line_height, DensityUtil.dp2px(mContext, (float) 0.5));
         mToBottomHeight = typedArray.getDimension(R.styleable.TRule_to_bottom_height, DensityUtil.dp2px(mContext, 2));
+        //文本底部到中间线顶部距离
+        mToLineTop= typedArray.getDimension(R.styleable.TRule_to_line_top, DensityUtil.dp2px(mContext, 30));
         typedArray.recycle();
 
     }
@@ -179,17 +182,17 @@ public class TRule extends View {
                 Rect bounds = new Rect();
                 if (i * mSmallScaleSpace == mCurrentIndex) {
                     mTextPoint.setColor(mTextColor);
-                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 17.5));
+                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 18));
                 } else {
                     mTextPoint.setColor(mTextColorChoose);
-                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 14.5));
+                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 15.5));
                 }
                 mTextPoint.getTextBounds(drawStr, 0, drawStr.length(), bounds);
                 //添加刻度文字
-                canvas.drawText(drawStr, location - bounds.width() / 2, 65, mTextPoint);
+                canvas.drawText(drawStr, location - bounds.width() / 2,mHeight-mToBottomHeight-mMiddleLineHeight-mToLineTop, mTextPoint);
             } else {
                 //小刻度
-                canvas.drawLine(location, mHeight - mSmallScaleHeight / 2 - 10, location, mHeight - 10, mSmallScalePaint);
+                canvas.drawLine(location, mHeight -mToBottomHeight , location, mHeight - mToBottomHeight-mSmallScaleHeight , mSmallScalePaint);
             }
 
         }

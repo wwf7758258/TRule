@@ -28,8 +28,8 @@
         <attr name="bottom_color" format="color"/>
         <attr name="bottom_line_height" format="dimension"/>
         <attr name="to_bottom_height" format="dimension"/>
-
-
+        <!--文本底部到中间线顶部的距离-->
+        <attr name="to_line_top" format="dimension"/>
     </declare-styleable>
 
 </resources>
