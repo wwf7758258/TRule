@@ -15,56 +15,58 @@ import android.view.View;
  * Created by 天哥哥 at 2017/5/25 10:29
  */
 public class TRule extends View {
-    private Paint mTextPoint;
-    private int TotalValue;
-    //刻度超过屏幕横向中间标记线颜色
-    private int mTextColor;
-    //刻度未超屏幕横向中间标记线颜色
-    private int mTextColorChoose;
-    //标尺开始位置
-    private int mCurrentIndex = 0;
-
-    //视图高度
-    private float mHeight;
-    //刻度宽度
-    private int mWidth;
-    //刻度高度
-    private float mSmallScaleHeight;
-    // 手势识别
-    private GestureDetector gestureDetector;
-    //滚动偏移量
-    private int mScrollingOffset;
+    //不可设置更改
     private Context mContext;
     private OnRulerChangeListener onRulerChangeListener;
-    private int mPos;
+    private GestureDetector gestureDetector;
     private int mOnceTouchEventOffset;
-    private float mMiddleLineHeight;
-    private int mBigScaleNum;
-    private int mSmallScaleNum;
-    private int mSmallScaleSpace;
-    private int mInitLocation;
-    private float mBigScaleHeight;
-    private float mTextSize;
-    private float mTextSizeChoose;
-    private int mBottomLineColor;
-    private float mBottomLineHeight;
-    private float mMiddleLineWidth;
-    private float mBigScaleWidth;
-    private float mSmallScaleWidth;
-    private int mMiddleLineColor;
-    private int mBigScaleColor;
-    private int msmallScaleColor;
+    private int mScrollingOffset;
+    private int mPos;
+    int mPosition;
+    private Paint mTextPoint;
     private Paint mBottomPaint;
     private Paint mMiddlePaint;
     private Paint mBigScalePaint;
     private Paint mSmallScalePaint;
-    private float mToBottomHeight;
-    private float mToLineTop;
-    private float mSensitiveness;
-    private String mCentText;
-    private boolean mShowCentText;
-    private String mIndexText;
+    private float mHeight;
+    private int mWidth;
+    //更改初始数据
+    private int mCurrentIndex = 0;
+    //设置初始格式(起始下标、是否显示中心文本、中心文本、下标文本的后缀)
     private int mIndexStart;
+    private boolean mShowCentText;
+    private String mCentText;
+    private String mIndexText;
+    //设置颜色相关
+    private int mTextColor;
+    private int mTextColorChoose;
+    private int mMiddleLineColor;
+    private int mBigScaleColor;
+    private int mSmallScaleColor;
+    private int mBottomLineColor;
+    //设置高度
+    private float mSmallScaleHeight;
+    private float mMiddleLineHeight;
+    private float mBottomLineHeight;
+    private float mBigScaleHeight;
+    //设置小刻度间隔
+    private int mSmallScaleSpace;
+    //设置大刻度、小刻度个数
+    private int mBigScaleNum;
+    private int mSmallScaleNum;
+    //文本大小
+    private float mTextSize;
+    private float mTextSizeChoose;
+    //设置宽度
+    private float mMiddleLineWidth;
+    private float mBigScaleWidth;
+    private float mSmallScaleWidth;
+    //设置控件底部到底部线距离
+    private float mToBottomHeight;
+    //设置文本底部到中心线顶部距离
+    private float mToLineTop;
+    //设置灵敏度
+    private float mSensitiveness;
 
 
     public TRule(Context context) {
@@ -103,16 +105,16 @@ public class TRule extends View {
         mMiddleLineHeight = typedArray.getDimension(R.styleable.TRule_middle_line_height, DensityUtil.dp2px(mContext, 40));
         mMiddleLineWidth = typedArray.getDimension(R.styleable.TRule_middle_line_width, DensityUtil.dp2px(mContext, (float) 0.5));
         mBigScaleHeight = typedArray.getDimension(R.styleable.TRule_big_scale_height, DensityUtil.dp2px(mContext, 20));
-        mBigScaleWidth = typedArray.getDimension(R.styleable.TRule_big_scale_height, DensityUtil.dp2px(mContext, (float) 0.5));
+        mBigScaleWidth = typedArray.getDimension(R.styleable.TRule_big_scale_width, DensityUtil.dp2px(mContext, (float) 0.5));
         mSmallScaleHeight = typedArray.getDimension(R.styleable.TRule_small_scale_height, DensityUtil.dp2px(mContext, 10));
         mSmallScaleWidth = typedArray.getDimension(R.styleable.TRule_small_scale_width, DensityUtil.dp2px(mContext, (float) 0.5));
         //中间线、大、小刻度颜色
         mMiddleLineColor = typedArray.getColor(R.styleable.TRule_middle_line_color, mContext.getResources().getColor(R.color.middle_line_color));
         mBigScaleColor = typedArray.getColor(R.styleable.TRule_big_scale_color, mContext.getResources().getColor(R.color.big_scale_color));
-        msmallScaleColor = typedArray.getColor(R.styleable.TRule_small_scale_color, mContext.getResources().getColor(R.color.small_scale_color));
+        mSmallScaleColor = typedArray.getColor(R.styleable.TRule_small_scale_color, mContext.getResources().getColor(R.color.small_scale_color));
         //刻度字体大小以及选中大小
-        mTextSize = typedArray.getDimension(R.styleable.TRule_text_size, DensityUtil.sp2px(mContext, 12));
-        mTextSizeChoose = typedArray.getDimension(R.styleable.TRule_text_size_choose, DensityUtil.sp2px(mContext, 15));
+        mTextSize = typedArray.getDimension(R.styleable.TRule_text_size, DensityUtil.sp2px(mContext, (float) 15.5));
+        mTextSizeChoose = typedArray.getDimension(R.styleable.TRule_text_size_choose, DensityUtil.sp2px(mContext, 18));
         //刻度字体颜色、以及选中颜色
         mTextColor = typedArray.getColor(R.styleable.TRule_text_color, mContext.getResources().getColor(R.color.text_color));
         mTextColorChoose = typedArray.getColor(R.styleable.TRule_text_color_choose, mContext.getResources().getColor(R.color.text_color_choose));
@@ -168,7 +170,7 @@ public class TRule extends View {
     private void drawScale(Canvas canvas) {
         mBigScalePaint.setColor(mBigScaleColor);
         mBigScalePaint.setStrokeWidth(mBigScaleWidth);
-        mSmallScalePaint.setColor(msmallScaleColor);
+        mSmallScalePaint.setColor(mSmallScaleColor);
         mSmallScalePaint.setStrokeWidth(mSmallScaleWidth);
         float startLocation = (mWidth / 2) - mSmallScaleSpace * mCurrentIndex;
         for (int i = 0; i <= mSmallScaleNum * mBigScaleNum; i++) {
@@ -185,11 +187,10 @@ public class TRule extends View {
                 Rect bounds = new Rect();
                 if (i == mCurrentIndex) {
                     mTextPoint.setColor(mTextColorChoose);
-                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 18
-                    ));
+                    mTextPoint.setTextSize(mTextSizeChoose);
                 } else {
                     mTextPoint.setColor(mTextColor);
-                    mTextPoint.setTextSize(DensityUtil.sp2px(mContext, (float) 15.5));
+                    mTextPoint.setTextSize(mTextSize);
                 }
                 mTextPoint.getTextBounds(drawStr, 0, drawStr.length(), bounds);
                 //添加刻度文字
@@ -288,11 +289,6 @@ public class TRule extends View {
         mScrollingOffset = mScrollingOffset - mCount * mSmallScaleSpace;
     }
 
-    int position;
-
-    public void setCurrentIndex(int index) {
-        innerSetCurrentIndex(index, false, true);
-    }
 
     public void innerSetCurrentIndex(int index, boolean inner, boolean callBack) {
         if (mCurrentIndex < 0 || mCurrentIndex > mBigScaleNum * mSmallScaleNum) {
@@ -305,18 +301,18 @@ public class TRule extends View {
         }
         invalidate();
         if (mCurrentIndex / mSmallScaleNum <= mSmallScaleNum / 2) {
-            position = mCurrentIndex / mSmallScaleNum + 1;
+            mPosition = mCurrentIndex / mSmallScaleNum + 1;
         } else {
-            position = mCurrentIndex / mSmallScaleNum;
+            mPosition = mCurrentIndex / mSmallScaleNum;
         }
         if (onRulerChangeListener != null && callBack) {
             switch (mBigScaleNum % 2) {
                 case 0:
-                    if (mShowCentText) evenCallBack(position - 1);
-                    else oddCallBack(position-1);
+                    if (mShowCentText) evenCallBack(mPosition - 1);
+                    else oddCallBack(mPosition - 1);
                     break;
                 case 1:
-                    oddCallBack(position - 1);
+                    oddCallBack(mPosition - 1);
                     break;
             }
         }
@@ -348,13 +344,119 @@ public class TRule extends View {
 
     }
 
-
+    //-------------------------事件监听------------------------------------
     public interface OnRulerChangeListener {
         void onRuleChanged(int position);
-
     }
 
     public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {
         this.onRulerChangeListener = onRulerChangeListener;
+    }
+
+    //--------------------------初始数据设置-------------------------------
+    public void setCurrentIndex(int index) {
+        innerSetCurrentIndex(index, false, true);
+    }
+    //-------------------------设置格式------------------------------------
+
+    public void setIndexStart(int indexStart) {
+        mIndexStart = indexStart;
+    }
+
+    public void setShowCentText(boolean showCentText) {
+        mShowCentText = showCentText;
+    }
+
+    public void setCentText(String centText) {
+        mCentText = centText;
+    }
+
+    public void setIndexText(String indexText) {
+        mIndexText = indexText;
+    }
+    //-----------------------------设置样式---------------------------------
+
+    public void setTextColor(int textColor) {
+        mTextColor = textColor;
+    }
+
+    public void setTextColorChoose(int textColorChoose) {
+        mTextColorChoose = textColorChoose;
+    }
+
+    public void setMiddleLineColor(int middleLineColor) {
+        mMiddleLineColor = middleLineColor;
+    }
+
+    public void setBigScaleColor(int bigScaleColor) {
+        mBigScaleColor = bigScaleColor;
+    }
+
+    public void setSmallScaleColor(int smallScaleColor) {
+        mSmallScaleColor = smallScaleColor;
+    }
+
+    public void setBottomLineColor(int bottomLineColor) {
+        mBottomLineColor = bottomLineColor;
+    }
+
+    public void setSmallScaleHeight(float smallScaleHeight) {
+        mSmallScaleHeight = smallScaleHeight;
+    }
+
+    public void setMiddleLineHeight(float middleLineHeight) {
+        mMiddleLineHeight = middleLineHeight;
+    }
+
+    public void setBottomLineHeight(float bottomLineHeight) {
+        mBottomLineHeight = bottomLineHeight;
+    }
+
+    public void setBigScaleHeight(float bigScaleHeight) {
+        mBigScaleHeight = bigScaleHeight;
+    }
+
+    public void setSmallScaleSpace(int smallScaleSpace) {
+        mSmallScaleSpace = smallScaleSpace;
+    }
+
+    public void setBigScaleNum(int bigScaleNum) {
+        mBigScaleNum = bigScaleNum;
+    }
+
+    public void setSmallScaleNum(int smallScaleNum) {
+        mSmallScaleNum = smallScaleNum;
+    }
+
+    public void setTextSize(float textSize) {
+        mTextSize = textSize;
+    }
+
+    public void setTextSizeChoose(float textSizeChoose) {
+        mTextSizeChoose = textSizeChoose;
+    }
+
+    public void setMiddleLineWidth(float middleLineWidth) {
+        mMiddleLineWidth = middleLineWidth;
+    }
+
+    public void setBigScaleWidth(float bigScaleWidth) {
+        mBigScaleWidth = bigScaleWidth;
+    }
+
+    public void setSmallScaleWidth(float smallScaleWidth) {
+        mSmallScaleWidth = smallScaleWidth;
+    }
+
+    public void setToBottomHeight(float toBottomHeight) {
+        mToBottomHeight = toBottomHeight;
+    }
+
+    public void setToLineTop(float toLineTop) {
+        mToLineTop = toLineTop;
+    }
+
+    public void setSensitiveness(float sensitiveness) {
+        mSensitiveness = sensitiveness;
     }
 }
