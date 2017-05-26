@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity implements TRule.OnRulerChan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mTRL = (TRule) findViewById(R.id.main_TRule);
+        mTRL.setOnRulerChangeListener(this);
         mTV = ((TextView) findViewById(R.id.tv));
         mTRL.setCurrentIndex(35);
-        mTRL.setOnRulerChangeListener(this);
 
 
     }

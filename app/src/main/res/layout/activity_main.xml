@@ -15,7 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/colorGray1"
-        app:big_scale_num="20"
+        app:big_scale_num="4"
+        app:center_text="总共"
+        app:index_start="-1"
+        app:index_text="天"
+        app:show_center_text="false"
         app:small_scale_num="10"
         />
 
