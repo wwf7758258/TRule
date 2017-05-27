@@ -27,11 +27,12 @@
 <pre>   
     //动画尺子位置状态实时改变
     //回调只在Up事件触发的时候才有
-    //position参数即为当前位置(起始值由index_start属性设定,默认为1)
     @Override
     public void onRuleChanged(Object object,int position) {
         //可以通过object区分是哪个TRule的回调
-        mTV.setText(position + "");
+        //position参数即为当前位置(起始值由index_start属性设定,默认为1)
+        //如果显示中间文本,那么中间位置的position回调为-1
+        mTV.setText(position + "");
         Log.i("onRuleChanged", position + "------------");
     }
 </pre>    
