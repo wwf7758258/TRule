@@ -31,7 +31,8 @@ public class StandardActivity extends AppCompatActivity implements TRule.OnRuler
     //回调只在Up事件触发的时候才有
     //position参数即为当前位置(起始值由index_start属性设定,默认为0)
     @Override
-    public void onRuleChanged(int position) {
+    public void onRuleChanged(Object object,int position) {
+        //可以通过object区分是哪个TRule的回调
         mTV.setText(position + "");
         Log.i("onRuleChanged", position + "------------");
     }

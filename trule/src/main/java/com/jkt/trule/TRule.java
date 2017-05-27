@@ -324,33 +324,31 @@ public class TRule extends View {
     private void evenCallBack(int position) {
         if (mIndexStart > 0) {
             if (position < mBigScaleNum / 2)
-                onRulerChangeListener.onRuleChanged(position + mIndexStart);
+                onRulerChangeListener.onRuleChanged(this,position + mIndexStart);
             else if (position == mBigScaleNum / 2)
-                onRulerChangeListener.onRuleChanged(-1);
-            else onRulerChangeListener.onRuleChanged(position + mIndexStart - 1);
+                onRulerChangeListener.onRuleChanged(this,-1);
+            else onRulerChangeListener.onRuleChanged(this,position + mIndexStart - 1);
         } else {
             if (position - mIndexStart < mBigScaleNum / 2)
-                onRulerChangeListener.onRuleChanged(position);
+                onRulerChangeListener.onRuleChanged(this,position);
             else if (position == mBigScaleNum / 2)
-                onRulerChangeListener.onRuleChanged(-1);
-            else onRulerChangeListener.onRuleChanged(position - 1);
+                onRulerChangeListener.onRuleChanged(this,-1);
+            else onRulerChangeListener.onRuleChanged(this,position - 1);
         }
     }
 
     private void oddCallBack(int position) {
         if (mIndexStart > 0) {
-            Log.i("position", position + "---------");
-            onRulerChangeListener.onRuleChanged(position + mIndexStart);
+            onRulerChangeListener.onRuleChanged(this,position + mIndexStart);
         } else {
-            Log.i("position", position + "---------");
-            onRulerChangeListener.onRuleChanged(position);
+            onRulerChangeListener.onRuleChanged(this,position);
         }
 
     }
 
     //-------------------------事件监听------------------------------------
     public interface OnRulerChangeListener {
-        void onRuleChanged(int position);
+        void onRuleChanged(Object object,int position);
     }
 
     public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {

@@ -26,7 +26,7 @@ public class CustomTextActivity extends AppCompatActivity implements TRule.OnRul
     }
 
     @Override
-    public void onRuleChanged(int position) {
+    public void onRuleChanged(Object object,int position) {
         mTV.setText(position + "");
         Log.i("onRuleChanged", position + "------------");
     }

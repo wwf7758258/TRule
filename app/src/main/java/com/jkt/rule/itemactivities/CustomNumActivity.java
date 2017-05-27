@@ -26,7 +26,7 @@ public class CustomNumActivity extends AppCompatActivity implements TRule.OnRule
     }
 
     @Override
-    public void onRuleChanged(int position) {
+    public void onRuleChanged(Object object,int position) {
         mTV.setText(position + "");
         Log.i("onRuleChanged", position + "------------");
     }
