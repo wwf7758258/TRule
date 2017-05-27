@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -132,7 +133,7 @@ public class TRule extends View {
         mCentText = typedArray.getString(R.styleable.TRule_center_text);
         mShowCentText = typedArray.getBoolean(R.styleable.TRule_show_center_text, true);
         //下标索引开始位置,默认为零
-        mIndexStart = typedArray.getInteger(R.styleable.TRule_index_start, 0);
+        mIndexStart = typedArray.getInteger(R.styleable.TRule_index_start, 1);
         typedArray.recycle();
 
     }
@@ -178,7 +179,7 @@ public class TRule extends View {
             if (i % mSmallScaleNum == 0) {
                 //大刻度
                 canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mBigScaleHeight, mBigScalePaint);
-                String drawStr = null;
+                String drawStr = "";
                 if (mBigScaleNum % 2 == 0 && mShowCentText) {
                     drawStr = bigNumIsEven(i);
                 } else {
@@ -208,8 +209,10 @@ public class TRule extends View {
         String drawStr;
         if (mIndexStart > 0) {
             int j = i / mSmallScaleNum + mIndexStart;
+            if (mIndexText == null) mIndexText = "月份";
             drawStr = j + mIndexText;
         } else {
+            if (mIndexText == null) mIndexText = "月份";
             drawStr = i / mSmallScaleNum + mIndexText;
         }
         return drawStr;
@@ -220,17 +223,16 @@ public class TRule extends View {
         String drawStr;
         if (i / mSmallScaleNum < mBigScaleNum / 2) {
             int j = i / mSmallScaleNum;
-            if (mIndexStart > 0) {
-                j = j + mIndexStart;
-            }
+            if (mIndexStart > 0) j = j + mIndexStart;
+            if (mIndexText == null) mIndexText = "月份";
             drawStr = j + mIndexText;
         } else if (i / mSmallScaleNum == mBigScaleNum / 2) {
+            if (mCentText == null) mCentText = "全部";
             drawStr = mCentText;
         } else {
             int j = i / mSmallScaleNum - 1;
-            if (mIndexStart > 0) {
-                j = j + mIndexStart;
-            }
+            if (mIndexStart > 0) j = j + mIndexStart;
+            if (mIndexText == null) mIndexText = "月份";
             drawStr = j + mIndexText;
         }
         return drawStr;
@@ -300,7 +302,7 @@ public class TRule extends View {
             mCurrentIndex = index;
         }
         invalidate();
-        if (mCurrentIndex / mSmallScaleNum <= mSmallScaleNum / 2) {
+        if (mCurrentIndex % mSmallScaleNum >= mSmallScaleNum / 2) {
             mPosition = mCurrentIndex / mSmallScaleNum + 1;
         } else {
             mPosition = mCurrentIndex / mSmallScaleNum;
@@ -308,11 +310,11 @@ public class TRule extends View {
         if (onRulerChangeListener != null && callBack) {
             switch (mBigScaleNum % 2) {
                 case 0:
-                    if (mShowCentText) evenCallBack(mPosition - 1);
-                    else oddCallBack(mPosition - 1);
+                    if (mShowCentText) evenCallBack(mPosition );
+                    else oddCallBack(mPosition );
                     break;
                 case 1:
-                    oddCallBack(mPosition - 1);
+                    oddCallBack(mPosition );
                     break;
             }
         }
@@ -323,11 +325,11 @@ public class TRule extends View {
         if (mIndexStart > 0) {
             if (position < mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(position + mIndexStart);
-            else if (position == mBigScaleNum / 2)
+            else if (position == mBigScaleNum / 2 )
                 onRulerChangeListener.onRuleChanged(-1);
-            else onRulerChangeListener.onRuleChanged(position + mIndexStart - 1);
+            else onRulerChangeListener.onRuleChanged(position + mIndexStart-1 );
         } else {
-            if (position < mBigScaleNum / 2)
+            if (position-mIndexStart < mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(position);
             else if (position == mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(-1);
@@ -337,8 +339,10 @@ public class TRule extends View {
 
     private void oddCallBack(int position) {
         if (mIndexStart > 0) {
+            Log.i("position",position+"---------");
             onRulerChangeListener.onRuleChanged(position + mIndexStart);
         } else {
+            Log.i("position",position+"---------");
             onRulerChangeListener.onRuleChanged(position);
         }
 
@@ -351,6 +355,9 @@ public class TRule extends View {
 
     public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {
         this.onRulerChangeListener = onRulerChangeListener;
+        if (mCurrentIndex == 0) {
+            setCurrentIndex(0);
+        }
     }
 
     //--------------------------初始数据设置-------------------------------

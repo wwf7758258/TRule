@@ -15,6 +15,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".itemactivities.StandardActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomIndexActivity">
+        </activity>
+        <activity
+            android:name=".itemactivities.CustomSizeActivity"
+            android:label="@string/title_activity_custom_size"
+            android:theme="@style/MyTheme.NoActionBar">
+        </activity>
+        <activity android:name=".itemactivities.CustomColorActivity">
+        </activity>
     </application>
 
 </manifest>

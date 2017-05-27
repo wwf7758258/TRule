@@ -1,32 +1,23 @@
 package com.jkt.rule;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.TextView;
+import com.jkt.rule.itemactivities.CustomIndexActivity;
+import com.jkt.rule.itemactivities.StandardActivity;
 
-import com.jkt.trule.TRule;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements TRule.OnRulerChangeListener {
-
-    private TRule mTRL;
-    private TextView mTV;
-
+public class MainActivity extends BaseActivity {
+    //直接查看对应Activity即可,各种属性含义见attrs
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mTRL = (TRule) findViewById(R.id.main_TRule);
-        mTRL.setOnRulerChangeListener(this);
-        mTV = ((TextView) findViewById(R.id.tv));
-        mTRL.setCurrentIndex(35);
-
-
+    public List<TypeBean> getList() {
+        return getData();
     }
 
-    @Override
-    public void onRuleChanged(int position) {
-        mTV.setText(position + "");
-        Log.i("onRuleChanged", position + "------------");
+    private List<TypeBean> getData() {
+        List<TypeBean> list = new ArrayList<>();
+        list.add(new TypeBean("标准样式(StandardActivity.class)", StandardActivity.class));
+        list.add(new TypeBean("没有时钟点(NoPointActivity.class)", CustomIndexActivity.class));
+        return list;
     }
+
 }

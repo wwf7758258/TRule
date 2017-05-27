@@ -11,25 +11,15 @@
 
     <com.jkt.trule.TRule
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_TRule"
+        android:id="@+id/trule"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:background="@color/colorGray1"
-        app:big_scale_num="4"
-        app:center_text="总共"
-        app:middle_line_color="@color/colorOrangne"
-        app:middle_line_width="5dp"
-        app:to_line_top="40dp"
-        app:middle_line_height="120dp"
-        app:big_scale_height="60dp"
-        app:small_scale_height="30dp"
-        app:index_start="2"
-        app:index_text="天"
-        app:show_center_text="true"
-        app:small_scale_num="10"
         />
 
     <TextView
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
