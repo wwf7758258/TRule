@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_custom_color"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.jkt.rule.itemactivities.CustomColorActivity">
+    android:orientation="vertical"
+    tools:context="com.jkt.rule.MainActivity">
 
-</RelativeLayout>
+    <com.jkt.trule.TRule
+        app:big_scale_color="@color/colorAccent"
+        app:text_color_choose="@color/colorWhite"
+        app:text_color="@color/colorGreen"
+        app:bottom_color="@color/colorPurple"
+        app:small_scale_color="@color/colorOrangne"
+        app:middle_line_color="@color/colorPink"
+        android:id="@+id/trule"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorGray1"
+
+        />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorGray"/>
+</LinearLayout>

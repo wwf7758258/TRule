@@ -10,7 +10,9 @@
     tools:context="com.jkt.rule.MainActivity">
 
     <com.jkt.trule.TRule
-        app:index_start="0"
+        app:show_center_text="true"
+        app:center_text="总数"
+        app:index_text="天"
         android:id="@+id/trule"
         android:layout_width="match_parent"
         android:layout_height="100dp"

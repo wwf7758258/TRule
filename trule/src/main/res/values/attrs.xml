@@ -26,9 +26,9 @@
         <!--底部线颜色、高、底部线距离控件底部距离-->
         <attr name="bottom_color" format="color"/>
         <attr name="bottom_line_height" format="dimension"/>
-        <attr name="to_bottom_height" format="dimension"/>
+        <attr name="bottom_line_to_view_bottom" format="dimension"/>
         <!--文本底部到中间线顶部的距离-->
-        <attr name="to_line_top" format="dimension"/>
+        <attr name="text_bottom_to_line_top" format="dimension"/>
         <!--灵敏度(以倍数为记,默认为1,类型为float)-->
         <attr name="sensitiveness" format="float"/>
         <!--各个下标对应文本(如1月,2月则string为"月",如1天、2天则为"天",前缀Index自动添加)-->

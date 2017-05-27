@@ -33,7 +33,7 @@ publish {
     userOrg = 'jkt'
     groupId = 'com.jkt'
     artifactId = 'trule'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.2'
     desc = 'Oh hi, this is a nice ruleView for an android project, right?'
     website = 'https://github.com/HoldMyOwn'
 }

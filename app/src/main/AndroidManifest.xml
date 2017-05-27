@@ -26,6 +26,12 @@
         </activity>
         <activity android:name=".itemactivities.CustomColorActivity">
         </activity>
+        <activity android:name=".itemactivities.CustomTextActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomNumActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomSenSpaceActivity">
+        </activity>
     </application>
 
 </manifest>

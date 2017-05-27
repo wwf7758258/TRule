@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.jkt.rule.itemactivities.CustomSizeActivity">
+    android:orientation="vertical"
+    tools:context="com.jkt.rule.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.jkt.trule.TRule
+        app:small_scale_space="15dp"
+        app:sensitiveness="2.5"
+        app:middle_line_height="120dp"
+        app:big_scale_height="60dp"
+        app:small_scale_height="30dp"
+        app:middle_line_width="10dp"
+        app:big_scale_width="6dp"
+        app:small_scale_width="3dp"
+        app:bottom_line_height="10dp"
+        app:text_bottom_to_line_top="60dp"
+        app:bottom_line_to_view_bottom="20dp"
+        android:id="@+id/trule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/MyTheme.AppBarOverlay">
+        android:layout_height="250dp"
+        android:background="@color/colorGray1"
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/MyTheme.PopupOverlay"/>
+        />
 
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_custom_size"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
-
-</android.support.design.widget.CoordinatorLayout>
+        android:background="@color/colorGray"/>
+</LinearLayout>

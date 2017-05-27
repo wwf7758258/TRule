@@ -122,9 +122,9 @@ public class TRule extends View {
         //底部线颜色、高、底部线距离控件底部距离
         mBottomLineColor = typedArray.getColor(R.styleable.TRule_bottom_color, mContext.getResources().getColor(R.color.bottom_line_color));
         mBottomLineHeight = typedArray.getDimension(R.styleable.TRule_bottom_line_height, DensityUtil.dp2px(mContext, (float) 0.5));
-        mToBottomHeight = typedArray.getDimension(R.styleable.TRule_to_bottom_height, DensityUtil.dp2px(mContext, 2));
+        mToBottomHeight = typedArray.getDimension(R.styleable.TRule_bottom_line_to_view_bottom, DensityUtil.dp2px(mContext, 2));
         //文本底部到中间线顶部距离
-        mToLineTop = typedArray.getDimension(R.styleable.TRule_to_line_top, DensityUtil.dp2px(mContext, 30));
+        mToLineTop = typedArray.getDimension(R.styleable.TRule_text_bottom_to_line_top, DensityUtil.dp2px(mContext, 30));
         //灵敏度(以倍数为记,默认为1,类型为float)
         mSensitiveness = typedArray.getFloat(R.styleable.TRule_sensitiveness, 1);
         //各个下标对应文本(如1月,2月则string为"月",如1天、2天则为"天",前缀Index自动添加)
@@ -159,13 +159,13 @@ public class TRule extends View {
     private void drawBottomLine(Canvas canvas) {
         mBottomPaint.setStrokeWidth(mBottomLineHeight);
         mBottomPaint.setColor(mBottomLineColor);
-        canvas.drawLine(0, mHeight - mToBottomHeight, mWidth, mHeight - mToBottomHeight, mBottomPaint);
+        canvas.drawLine(0, mHeight - mToBottomHeight-mBottomLineHeight/2, mWidth, mHeight - mToBottomHeight-mBottomLineHeight/2, mBottomPaint);
     }
 
     private void drawMiddleLine(Canvas canvas) {
         mMiddlePaint.setStrokeWidth(mMiddleLineWidth);
         mMiddlePaint.setColor(mMiddleLineColor);
-        canvas.drawLine(mWidth / 2, mHeight - DensityUtil.dp2px(mContext, 2) - mMiddleLineHeight, mWidth / 2, mHeight - DensityUtil.dp2px(mContext, 2), mMiddlePaint);
+        canvas.drawLine(mWidth / 2, mHeight - mToBottomHeight-mBottomLineHeight - mMiddleLineHeight, mWidth / 2, mHeight - mToBottomHeight-mBottomLineHeight, mMiddlePaint);
     }
 
     private void drawScale(Canvas canvas) {
@@ -178,7 +178,7 @@ public class TRule extends View {
             float location = startLocation + i * mSmallScaleSpace;
             if (i % mSmallScaleNum == 0) {
                 //大刻度
-                canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mBigScaleHeight, mBigScalePaint);
+                canvas.drawLine(location, mHeight - mToBottomHeight - mBottomLineHeight, location, mHeight - mToBottomHeight - mBottomLineHeight - mBigScaleHeight, mBigScalePaint);
                 String drawStr = "";
                 if (mBigScaleNum % 2 == 0 && mShowCentText) {
                     drawStr = bigNumIsEven(i);
@@ -198,7 +198,7 @@ public class TRule extends View {
                 canvas.drawText(drawStr, location - bounds.width() / 2, mHeight - mToBottomHeight - mMiddleLineHeight - mToLineTop, mTextPoint);
             } else {
                 //小刻度
-                canvas.drawLine(location, mHeight - mToBottomHeight, location, mHeight - mToBottomHeight - mSmallScaleHeight, mSmallScalePaint);
+                canvas.drawLine(location, mHeight - mToBottomHeight - mBottomLineHeight, location, mHeight - mToBottomHeight - mBottomLineHeight - mSmallScaleHeight, mSmallScalePaint);
             }
 
         }
@@ -310,11 +310,11 @@ public class TRule extends View {
         if (onRulerChangeListener != null && callBack) {
             switch (mBigScaleNum % 2) {
                 case 0:
-                    if (mShowCentText) evenCallBack(mPosition );
-                    else oddCallBack(mPosition );
+                    if (mShowCentText) evenCallBack(mPosition);
+                    else oddCallBack(mPosition);
                     break;
                 case 1:
-                    oddCallBack(mPosition );
+                    oddCallBack(mPosition);
                     break;
             }
         }
@@ -325,11 +325,11 @@ public class TRule extends View {
         if (mIndexStart > 0) {
             if (position < mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(position + mIndexStart);
-            else if (position == mBigScaleNum / 2 )
+            else if (position == mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(-1);
-            else onRulerChangeListener.onRuleChanged(position + mIndexStart-1 );
+            else onRulerChangeListener.onRuleChanged(position + mIndexStart - 1);
         } else {
-            if (position-mIndexStart < mBigScaleNum / 2)
+            if (position - mIndexStart < mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(position);
             else if (position == mBigScaleNum / 2)
                 onRulerChangeListener.onRuleChanged(-1);
@@ -339,10 +339,10 @@ public class TRule extends View {
 
     private void oddCallBack(int position) {
         if (mIndexStart > 0) {
-            Log.i("position",position+"---------");
+            Log.i("position", position + "---------");
             onRulerChangeListener.onRuleChanged(position + mIndexStart);
         } else {
-            Log.i("position",position+"---------");
+            Log.i("position", position + "---------");
             onRulerChangeListener.onRuleChanged(position);
         }
 
@@ -355,9 +355,6 @@ public class TRule extends View {
 
     public void setOnRulerChangeListener(OnRulerChangeListener onRulerChangeListener) {
         this.onRulerChangeListener = onRulerChangeListener;
-        if (mCurrentIndex == 0) {
-            setCurrentIndex(0);
-        }
     }
 
     //--------------------------初始数据设置-------------------------------
