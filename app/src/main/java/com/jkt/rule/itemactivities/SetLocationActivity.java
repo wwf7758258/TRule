@@ -8,20 +8,20 @@ import android.widget.TextView;
 import com.jkt.rule.R;
 import com.jkt.trule.TRule;
 
-public class CustomIndexActivity extends AppCompatActivity implements TRule.OnRulerChangeListener {
+public class SetLocationActivity extends AppCompatActivity implements TRule.OnRulerChangeListener {
     private TRule mTRL;
     private TextView mTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_index);
-        //属性xml中定义,当然也可以set方法
-        //可以设定刻度尺的起始下标,对应回调也按指定下标回调
-        //下标起始位置大于等于0类型为整数
+        setContentView(R.layout.activity_set_location);
         mTRL = (TRule) findViewById(R.id.trule);
         mTV = ((TextView) findViewById(R.id.tv));
         mTRL.setOnRulerChangeListener(this);
+        //属性在xml中定义,当然也可以set方法
+        //设置位置,数目以小刻度为单位(第几个小刻度,与index无关)
+//        mTRL.setLocation(60);
 
 
     }
@@ -32,3 +32,4 @@ public class CustomIndexActivity extends AppCompatActivity implements TRule.OnRu
         Log.i("onRuleChanged", position + "------------");
     }
 }
+

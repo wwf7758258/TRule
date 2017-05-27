@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,7 +96,7 @@ public class TRule extends View {
     private void initAttr(AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.TRule, defStyleAttr, 0);
         //标尺开始显示位置(以小刻度为单位)
-        mCurrentIndex = typedArray.getInteger(R.styleable.TRule_init_location, 0);
+        mCurrentIndex = typedArray.getInteger(R.styleable.TRule_set_location, 0);
         //大刻度数、一个大刻度包含小刻度数、小刻度间隔宽度
         mBigScaleNum = typedArray.getInteger(R.styleable.TRule_big_scale_num, 12);
         mSmallScaleNum = typedArray.getInteger(R.styleable.TRule_small_scale_num, 10);
@@ -356,7 +355,7 @@ public class TRule extends View {
     }
 
     //--------------------------初始数据设置-------------------------------
-    public void setCurrentIndex(int index) {
+    public void setLocation(int index) {
         innerSetCurrentIndex(index, false, true);
     }
     //-------------------------设置格式------------------------------------

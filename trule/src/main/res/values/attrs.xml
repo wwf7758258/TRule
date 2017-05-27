@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="TRule">
         <!--标尺开始显示位置(以小刻度为单位)-->
-        <attr name="init_location" format="integer"/>
+        <attr name="set_location" format="integer"/>
         <!--大刻度数、一个大刻度包含小刻度数、小刻度间隔宽度-->
         <attr name="big_scale_num" format="integer"/>
         <attr name="small_scale_num" format="integer"/>

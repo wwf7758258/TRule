@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".itemactivities.StandardActivity">
         </activity>
-        <activity android:name=".itemactivities.CustomIndexActivity">
+        <activity android:name=".itemactivities.IndexActivity">
         </activity>
         <activity
             android:name=".itemactivities.CustomSizeActivity"
@@ -31,6 +31,8 @@
         <activity android:name=".itemactivities.CustomNumActivity">
         </activity>
         <activity android:name=".itemactivities.CustomSenSpaceActivity">
+        </activity>
+        <activity android:name=".itemactivities.SetLocationActivity">
         </activity>
     </application>
 

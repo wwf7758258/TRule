@@ -1,11 +1,12 @@
 package com.jkt.rule;
 
 import com.jkt.rule.itemactivities.CustomColorActivity;
-import com.jkt.rule.itemactivities.CustomIndexActivity;
+import com.jkt.rule.itemactivities.IndexActivity;
 import com.jkt.rule.itemactivities.CustomNumActivity;
 import com.jkt.rule.itemactivities.CustomSenSpaceActivity;
 import com.jkt.rule.itemactivities.CustomSizeActivity;
 import com.jkt.rule.itemactivities.CustomTextActivity;
+import com.jkt.rule.itemactivities.SetLocationActivity;
 import com.jkt.rule.itemactivities.StandardActivity;
 
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class MainActivity extends BaseActivity {
     private List<TypeBean> getData() {
         List<TypeBean> list = new ArrayList<>();
         list.add(new TypeBean("标准样式(StandardActivity.class)", StandardActivity.class));
-        list.add(new TypeBean("下标起始(CustomIndexActivity.class)", CustomIndexActivity.class));
+        list.add(new TypeBean("下标起始(CustomIndexActivity.class)", IndexActivity.class));
+        list.add(new TypeBean("设置选中位置(SetLocationActivity.class)", SetLocationActivity.class));
         list.add(new TypeBean("文本类型(CustomTextActivity.class)", CustomTextActivity.class));
         list.add(new TypeBean("大小刻度数目(CustomNumActivity.class)", CustomNumActivity.class));
         list.add(new TypeBean("灵敏度和小刻度间隔宽(CustomNumActivity.class)", CustomSenSpaceActivity.class));
