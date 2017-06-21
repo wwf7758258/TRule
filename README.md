@@ -38,4 +38,4 @@
 </pre>    
 ###   具体细节用法,下载查看Demo</br>
 ###   模板依赖:&nbsp;&nbsp;项目里面的TRule模板(可更加灵活扩展)</br>
-###   gradle依赖:&nbsp;&nbsp;&nbsp;compile&nbsp;'com.jkt:trule:1.0.4'</br>
+###   gradle依赖:&nbsp;&nbsp;&nbsp;compile&nbsp;'com.jkt:trule:1.0.5'</br>
