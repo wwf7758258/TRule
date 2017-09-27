@@ -8,7 +8,7 @@
 ### 主要功能扩展方面
   支持设定下标起始位置、支持设定选中位置、中间标记的有无、文本自定义   
 ###  预览图
-  <img width="350"  src="https://github.com/HoldMyOwn/TRule/blob/master/preview/all.gif"/><br>
+  <img width="350"  src="https://github.com/HoldMyOwn/TRule/blob/master/preview/rule-5.gif"/><br>
   大概演示,详见各个Activity</br>
   
 ## Attributes属性（xml中指定）
